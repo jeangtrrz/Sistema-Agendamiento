@@ -1,0 +1,70 @@
+# Configuración para ignorar en Git
+# Sistema de Agendamiento - Internet Cordillera
+
+# Archivos de configuración sensibles
+config/config.php
+config/local.php
+
+# Logs
+logs/
+*.log
+
+# Base de datos local
+database/backups/
+*.sql
+
+# Archivos del Sistema Operativo
+.DS_Store
+Thumbs.db
+.directory
+
+# Editores
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+*.swp
+*.swo
+*~
+
+# Dependencias
+vendor/
+node_modules/
+
+# Archivos temporales
+tmp/
+temp/
+*.tmp
+
+# Cache
+.cache
+cache/
+
+# Sesiones
+sessions/
+
+# Archivos de compilación
+*.pyc
+*.pyo
+__pycache__/
+
+# Ambiente local
+.env
+.env.local
+.env.*.php
+
+# IDE
+.project
+.settings
+
+# OS specific
+.Spotlight-V100
+.Trashes
+
+# npm
+npm-debug.log*
+yarn-error.log*
+
+# Archivos personales
+testing/
+debug/

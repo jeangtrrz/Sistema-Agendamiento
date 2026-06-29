@@ -1,0 +1,381 @@
+╔═════════════════════════════════════════════════════════════════════════════╗
+║                                                                             ║
+║           GUÍA PASO A PASO - CREAR BD CON PREFIJO "internet_"              ║
+║                                                                             ║
+║              Sistema de Agendamiento - Internet Cordillera                  ║
+║                                                                             ║
+╚═════════════════════════════════════════════════════════════════════════════╝
+
+Objetivo: Crear la base de datos "internet_agenda" y usuario "internet_agenda_user"
+en cPanel para que el sistema funcione correctamente.
+
+═════════════════════════════════════════════════════════════════════════════════
+ PASO 1: ACCEDER A cPANEL
+═════════════════════════════════════════════════════════════════════════════════
+
+1. Abre tu navegador web
+2. Ve a: https://cp.tu-dominio.com (o el URL que tu proveedor te dé)
+3. Login con tu usuario y contraseña de cPanel
+4. Verás el panel de control principal
+
+   Aspecto esperado:
+   • Logo de cPanel en la esquina superior izquierda
+   • Menú de opciones en el lado izquierdo
+   • Nombre de tu usuario y dominio
+
+
+═════════════════════════════════════════════════════════════════════════════════
+ PASO 2: BUSCAR MYSQL DATABASES
+═════════════════════════════════════════════════════════════════════════════════
+
+1. En cPanel, busca la sección "Bases de Datos"
+2. Haz clic en "MySQL Databases" (o "Administrador de Bases de Datos MySQL")
+
+   Ruta alternativa:
+   • Si no lo ves en el menú principal
+   • Busca en la barra de búsqueda: "MySQL"
+   • Haz clic en "MySQL Databases"
+
+
+═════════════════════════════════════════════════════════════════════════════════
+ PASO 3: CREAR LA BASE DE DATOS
+═════════════════════════════════════════════════════════════════════════════════
+
+Sección: "Create New Database" o "Crear Nueva Base de Datos"
+
+1. Verás un campo que dice: "Database name"
+2. En ese campo, escribe EXACTAMENTE:
+   
+   internet_agenda
+   
+   (Sin espacios, respetando mayúsculas y minúsculas)
+
+3. El sistema completará automáticamente con tu prefijo:
+   
+   tu_usuario_internet_agenda
+   
+   ⚠️ Esto es normal, tu usuario MySQL será con prefijo
+
+4. Haz clic en el botón "Create Database" o "Crear Base de Datos"
+
+5. Verás un mensaje de confirmación:
+   
+   ✅ "The database 'tu_usuario_internet_agenda' has been created"
+   
+   O en español:
+   
+   ✅ "Se ha creado la base de datos 'tu_usuario_internet_agenda'"
+
+Nota: Aunque muestre "tu_usuario_internet_agenda", el sistema la identifica
+como "internet_agenda" en el código PHP.
+
+
+═════════════════════════════════════════════════════════════════════════════════
+ PASO 4: CREAR USUARIO MYSQL
+═════════════════════════════════════════════════════════════════════════════════
+
+Sección: "MySQL Users" o "Usuarios MySQL"
+
+1. Verás un campo que dice: "Username" o "Nombre de Usuario"
+2. En ese campo, escribe EXACTAMENTE:
+   
+   internet_agenda_user
+   
+   (Sin espacios, respetando mayúsculas y minúsculas)
+
+3. El sistema completará automáticamente:
+   
+   tu_usuario_internet_agenda_user
+   
+   Esto es normal y esperado.
+
+4. Verás un campo que dice: "Password" o "Contraseña"
+5. Genera una contraseña SEGURA:
+   
+   ✅ Buena contraseña:  P@ssw0rd!2024Segura
+   ❌ Mala contraseña:   123456 o "admin"
+   
+   Recomendación: Usa al menos 12 caracteres
+
+6. Haz clic en "Generate Password" para una automática, o escribe una
+
+7. IMPORTANTE: Copia y guarda esta contraseña en un lugar seguro
+   • Necesitarás esta contraseña después
+
+8. Haz clic en "Create User" o "Crear Usuario"
+
+9. Verás confirmación:
+   
+   ✅ "The user 'tu_usuario_internet_agenda_user' has been created"
+
+
+═════════════════════════════════════════════════════════════════════════════════
+ PASO 5: ASIGNAR PERMISOS AL USUARIO
+═════════════════════════════════════════════════════════════════════════════════
+
+Esta es una parte CRÍTICA - sin permisos no funcionará.
+
+Sección: "Add User To Database" o "Agregar Usuario a Base de Datos"
+
+1. Dropdown "User": Selecciona "tu_usuario_internet_agenda_user"
+2. Dropdown "Database": Selecciona "tu_usuario_internet_agenda"
+3. Haz clic en "Add"
+
+4. Verás una tabla: "User Database Privileges"
+5. Por defecto, aparecerá con ciertos permisos
+6. Si no aparece directamente con todos los permisos, puedes hacer clic en
+   "Manage Privileges" o "Gestionar Privilegios"
+
+7. En la ventana de permisos, asegúrate de que estén marcados:
+   
+   ✅ SELECT
+   ✅ INSERT
+   ✅ UPDATE
+   ✅ DELETE
+   ✅ CREATE
+   ✅ DROP
+   ✅ INDEX
+   ✅ ALTER
+   
+   (Los 8 permisos básicos)
+
+8. Haz clic en "Make Changes" o "Guardar Cambios"
+
+
+═════════════════════════════════════════════════════════════════════════════════
+ PASO 6: SUBIR LOS ARCHIVOS DEL SISTEMA
+═════════════════════════════════════════════════════════════════════════════════
+
+1. En cPanel, ve a "File Manager" o "Administrador de Archivos"
+
+2. Navega a "public_html" (carpeta pública del sitio)
+
+3. Sube la carpeta "sistema_agendamiento" aquí
+   
+   Opciones:
+   a) Arrastra y suelta desde tu computadora (drag & drop)
+   b) Haz clic en "Upload" y selecciona los archivos
+   c) Usa FTP si prefieres
+
+4. Espera a que termine la carga
+
+5. Verifica que la carpeta está en:
+   
+   public_html/sistema_agendamiento/
+
+
+═════════════════════════════════════════════════════════════════════════════════
+ PASO 7: IMPORTAR LA BASE DE DATOS (SCRIPT SQL)
+═════════════════════════════════════════════════════════════════════════════════
+
+1. En cPanel, ve a "phpMyAdmin"
+
+2. Cuando se abra, verás una lista de bases de datos en la izquierda
+
+3. Haz clic en "tu_usuario_internet_agenda" en la lista
+
+4. En la barra de menú superior, haz clic en "Importar"
+
+5. En la sección "Importar archivo", haz clic en "Elegir archivo" o "Browse"
+
+6. Selecciona el archivo: "database/init.sql"
+   
+   Ubicación en tu computadora:
+   c:\...\sistema_agendamiento\database\init.sql
+
+7. Haz clic en "Ir" o "Importar"
+
+8. Espera a que termine (puede tardar unos segundos)
+
+9. Verás un mensaje:
+   
+   ✅ "Importación realizada exitosamente"
+   ✅ "All imports have been completed"
+   
+   O similar.
+
+10. Si ves errores, revisa la sección "Troubleshooting" al final
+
+
+═════════════════════════════════════════════════════════════════════════════════
+ PASO 8: CONFIGURAR EL ARCHIVO config.php
+═════════════════════════════════════════════════════════════════════════════════
+
+1. En cPanel File Manager, navega a:
+   
+   public_html/sistema_agendamiento/config/
+
+2. Haz clic derecho en "config.php"
+
+3. Selecciona "Edit" o "Editar"
+
+4. Busca estas líneas (aproximadamente línea 8-14):
+
+   define('DB_HOST', 'localhost');
+   define('DB_USER', 'root');
+   define('DB_PASS', '');
+   define('DB_NAME', 'agenda_cordillera');
+
+5. Actualiza con tus valores:
+
+   ANTES:                              DESPUÉS:
+   ──────────────────────────────────────────────────────────────
+   define('DB_HOST', 'localhost');     define('DB_HOST', 'localhost');
+   define('DB_USER', 'root');          define('DB_USER', 'tu_usuario_internet_agenda_user');
+   define('DB_PASS', '');              define('DB_PASS', '[tu_contraseña]');
+   define('DB_NAME', 'agenda_cordillera');    define('DB_NAME', 'tu_usuario_internet_agenda');
+
+   Donde:
+   • [tu_usuario_internet_agenda_user] = el usuario que creaste en PASO 4
+   • [tu_contraseña] = la contraseña que estableciste en PASO 4
+   • [tu_usuario_internet_agenda] = la BD que creaste en PASO 3
+
+   EJEMPLO REAL:
+   ──────────────────────────────────────────────────────────────
+   define('DB_HOST', 'localhost');
+   define('DB_USER', 'miempresa_internet_agenda_user');
+   define('DB_PASS', 'P@ssw0rd!2024Segura');
+   define('DB_NAME', 'miempresa_internet_agenda');
+
+6. Busca también la línea:
+   
+   define('APP_URL', 'http://localhost/sistema_agendamiento');
+   
+   Cámbiala a:
+   
+   define('APP_URL', 'https://tu-dominio.com/sistema_agendamiento');
+
+7. Haz clic en "Save Changes" o "Guardar Cambios"
+
+
+═════════════════════════════════════════════════════════════════════════════════
+ PASO 9: VERIFICAR LA INSTALACIÓN
+═════════════════════════════════════════════════════════════════════════════════
+
+1. Abre tu navegador
+
+2. Ve a:
+   
+   https://tu-dominio.com/sistema_agendamiento/verificar.php
+
+3. Verás una página con un checklist que te dirá:
+
+   ✅ PHP Version OK
+   ✅ Extensiones OK
+   ✅ Carpetas OK
+   ✅ Archivos OK
+   ✅ Conexión a BD OK
+   ✅ Tablas OK
+
+   Si TODOS están verdes (✅), ¡la instalación fue exitosa!
+
+4. Si alguno está rojo (❌), anota el error y revisa la sección "Troubleshooting"
+
+
+═════════════════════════════════════════════════════════════════════════════════
+ PASO 10: ACCEDER AL SISTEMA
+═════════════════════════════════════════════════════════════════════════════════
+
+1. Ve a:
+   
+   https://tu-dominio.com/sistema_agendamiento/
+
+2. Verás la página de login
+
+3. Usa las credenciales iniciales:
+   
+   Email: jean@internetcordillera.cl
+   Contraseña: 123456
+
+4. Haz clic en "Ingresar"
+
+5. ¡Deberías ver el dashboard del sistema!
+
+⚠️  IMPORTANTE: Cambia estas contraseñas inmediatamente
+   • Perfil → Cambiar Contraseña
+   • Usa una contraseña segura
+
+
+═════════════════════════════════════════════════════════════════════════════════
+ 🔧 TROUBLESHOOTING
+═════════════════════════════════════════════════════════════════════════════════
+
+❌ Error: "Connection refused"
+✅ Solución:
+   1. Verifica que config.php tiene los valores correctos
+   2. Verifica que el usuario MySQL existe
+   3. Verifica que el usuario tiene permisos en la BD
+   4. Prueba con phpMyAdmin
+
+❌ Error: "Access denied for user"
+✅ Solución:
+   1. Verifica que DB_USER es correcto
+   2. Verifica que DB_PASS es correcta
+   3. Verifica que el usuario existe en cPanel
+   4. Copia exactamente desde cPanel
+
+❌ Error: "Table doesn't exist"
+✅ Solución:
+   1. Verifica que importaste init.sql correctamente
+   2. Vuelve a importar en phpMyAdmin
+   3. Verifica que el usuario tiene permisos
+
+❌ Error: 404 Not Found
+✅ Solución:
+   1. Verifica que subiste los archivos a public_html
+   2. Verifica que la carpeta es: public_html/sistema_agendamiento/
+   3. Verifica que APP_URL en config.php es correcto
+
+❌ Error: 500 Internal Server Error
+✅ Solución:
+   1. Revisa logs/error.log
+   2. Verifica que config.php tiene la sintaxis correcta
+   3. Verifica que todas las carpetas tienen permisos 755
+
+
+═════════════════════════════════════════════════════════════════════════════════
+ 📋 VALORES DE REFERENCIA
+═════════════════════════════════════════════════════════════════════════════════
+
+Después de completar estos pasos, tus valores deben ser:
+
+BD:      tu_usuario_internet_agenda        (creada en PASO 3)
+Usuario: tu_usuario_internet_agenda_user   (creado en PASO 4)
+Pass:    [Tu contraseña segura]            (establecida en PASO 4)
+Host:    localhost
+URL:     https://tu-dominio.com/sistema_agendamiento/
+
+
+═════════════════════════════════════════════════════════════════════════════════
+ ✅ CHECKLIST FINAL
+═════════════════════════════════════════════════════════════════════════════════
+
+Después de completar todos los pasos:
+
+[ ] 1. BD "internet_agenda" creada en cPanel
+[ ] 2. Usuario "internet_agenda_user" creado
+[ ] 3. Permisos asignados al usuario
+[ ] 4. Archivos subidos a public_html/sistema_agendamiento/
+[ ] 5. Script init.sql importado en phpMyAdmin
+[ ] 6. config.php actualizado con credenciales correctas
+[ ] 7. verificar.php muestra todos los checks en verde
+[ ] 8. Puedo acceder a https://tu-dominio.com/sistema_agendamiento/
+[ ] 9. Login funciona con jean@internetcordillera.cl
+[ ] 10. He cambiado las contraseñas iniciales
+
+Si todos están marcados ✅, ¡tu sistema está completamente instalado!
+
+
+═════════════════════════════════════════════════════════════════════════════════
+
+Fecha: Mayo 27, 2026
+Versión: 1.0
+Estado: Completado
+
+Éxito en tu instalación. Si necesitas ayuda, revisa la documentación:
+• README.md - Documentación técnica completa
+• INSTALACION.md - Guía de instalación
+• CAMBIOS_BD_PREFIJO.md - Cambios de BD
+• RESUMEN_CAMBIOS_BD.txt - Resumen visual
+
+═════════════════════════════════════════════════════════════════════════════════

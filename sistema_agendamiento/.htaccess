@@ -1,0 +1,133 @@
+# Seguridad de Servidor Web
+# Internet Cordillera - Sistema de Agendamiento
+
+# Habilitar mod_rewrite
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /sistema_agendamiento/
+    
+    # Bloquear acceso a carpetas sensibles
+    RewriteRule ^(config|models|database)/ - [F]
+    
+    # Permitir archivos .api.php en controllers
+    RewriteRule ^controllers/.*\.api\.php$ - [L]
+    
+    # Bloquear acceso directo a otros .php en controllers
+    RewriteRule ^controllers/.*\.php$ - [F]
+    
+    # Permitir archivos estáticos en assets (css, js, images, fonts)
+    RewriteRule ^assets/(css|js|images|fonts)/ - [L]
+    
+    # Bloquear archivos .php en assets
+    RewriteRule ^assets/.*\.php$ - [F]
+</IfModule>
+
+# Proteger archivos sensibles
+<FilesMatch "\.env|\.json|\.sql|\.bak">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+# Proteger archivos de configuración
+<FilesMatch "^(config\.php|session\.php)$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+# Deshabilitar listado de directorios
+<IfModule mod_autoindex.c>
+    Options -Indexes
+</IfModule>
+
+# Establecer headers de seguridad
+<IfModule mod_headers.c>
+    # Prevenir ataques de MIME type sniffing
+    Header set X-Content-Type-Options "nosniff"
+    
+    # Habilitar protección contra XSS
+    Header set X-XSS-Protection "1; mode=block"
+    
+    # Prevenir clickjacking
+    Header set X-Frame-Options "SAMEORIGIN"
+    
+    # Referrer Policy
+    Header set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+
+# Comprimir contenido
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html
+    AddOutputFilterByType DEFLATE text/plain
+    AddOutputFilterByType DEFLATE text/xml
+    AddOutputFilterByType DEFLATE text/css
+    AddOutputFilterByType DEFLATE text/javascript
+    AddOutputFilterByType DEFLATE application/javascript
+    AddOutputFilterByType DEFLATE application/xml
+</IfModule>
+
+# Cache del navegador
+<IfModule mod_expires.c>
+    ExpiresActive On
+    
+    # Imágenes
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/gif "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType image/webp "access plus 1 year"
+    ExpiresByType image/svg+xml "access plus 1 year"
+    
+    # CSS y JavaScript
+    ExpiresByType text/css "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
+    ExpiresByType text/javascript "access plus 1 month"
+    
+    # HTML
+    ExpiresByType text/html "access plus 1 day"
+</IfModule>
+
+# Desactivar ejecución de scripts en carpeta assets
+<FilesMatch "^assets/.*\.php$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+# Bloquear acceso a .php en carpeta assets usando RewriteRule
+<IfModule mod_rewrite.c>
+    RewriteRule ^assets/.*\.php$ - [F]
+</IfModule>
+
+# Forzar HTTPS (descomenta si tu sitio tiene SSL)
+# <IfModule mod_rewrite.c>
+#     RewriteCond %{HTTPS} off
+#     RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+# </IfModule>
+
+# Proteger contra acceso a código fuente
+<FilesMatch "~\.php$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+</FilesMatch>
+
+# Permitir acceso solo a index.php y archivos de assets
+<IfModule mod_rewrite.c>
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !^/sistema_agendamiento/assets/
+    RewriteRule ^(.*)$ /sistema_agendamiento/index.php?page=$1 [QSA,L]
+</IfModule>

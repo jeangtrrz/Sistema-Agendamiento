@@ -1,0 +1,252 @@
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║                     QUICK START CARD - IMPRIMIBLE                            ║
+║                   Sistema de Agendamiento Internet Cordillera                ║
+╚═══════════════════════════════════════════════════════════════════════════════╝
+
+Puedes imprimir esta tarjeta y pegarla en la oficina para referencia rápida.
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📌 ACCESO RÁPIDO
+
+URL del Sistema:
+https://internetcordillera.cl/sistema_agendamiento/
+
+Diagnóstico:
+https://internetcordillera.cl/sistema_agendamiento/verificar.php
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🔑 CREDENCIALES INICIALES (CAMBIAR INMEDIATAMENTE)
+
+Admin:
+  Email: jean@internetcordillera.cl
+  Pass: 123456 ⚠️
+
+Técnico:
+  Email: freddy@internetcordillera.cl
+  Pass: 123456 ⚠️
+
+═══════════════════════════════════════════════════════════════════════════════
+
+⚡ PASOS RÁPIDOS (Primera vez):
+
+1️⃣  Ir a: https://tu-dominio.com/sistema_agendamiento/
+2️⃣  Login con: jean@internetcordillera.cl / 123456
+3️⃣  Ir a Perfil → Cambiar Contraseña (usar contraseña segura)
+4️⃣  Ir a Usuarios → Crear usuarios para técnicos reales
+5️⃣  Ir a Citas → Nueva Cita (para probar)
+6️⃣  ✓ Todo funciona
+
+═══════════════════════════════════════════════════════════════════════════════
+
+👤 ROLES Y PERMISOS
+
+ADMINISTRADOR (Jean):
+  ✓ Crear, editar, eliminar citas
+  ✓ Gestionar usuarios
+  ✓ Ver reportes completos
+  ✓ Ver calendar de todo el equipo
+
+TÉCNICO (Freddy, otros):
+  ✓ Ver citas asignadas
+  ✓ Marcar como completadas
+  ✓ Ver calendar y reportes
+  ✗ No crear/editar citas
+  ✗ No gestionar usuarios
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🎨 TIPOS DE CITA Y COLORES
+
+🟢 Instalación (Verde)
+   Instalación de servicios de internet
+
+🟠 Retiro (Naranja)
+   Retiro de equipamiento
+
+🔵 Soporte (Azul)
+   Visitas de soporte técnico
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📋 FUNCIONES PRINCIPALES
+
+Dashboard: Ver estadísticas del día
+Citas: Gestionar todas las citas
+Calendario: Ver semana (Lun-Sab, 09-18 hrs)
+Reportes: Análisis de período
+Usuarios: Gestionar equipo (Admin)
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🚨 PROBLEMAS RÁPIDOS
+
+"No puedo entrar"
+→ Verificar URL y credenciales
+→ Ejecutar verificar.php
+→ Revisar config/config.php
+
+"Las citas no aparecen"
+→ Verificar fecha sea esta semana
+→ Limpiar caché (Ctrl+Shift+Delete)
+→ Revisar logs/error.log
+
+"Olvidé contraseña"
+→ Contactar admin
+→ Admin puede resetear en phpMyAdmin
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📌 HORARIOS OPERACIONALES
+
+Lunes a Sábado: 09:00 - 18:00
+Domingo: Cerrado
+Duración cita: 60 minutos
+
+═══════════════════════════════════════════════════════════════════════════════
+
+💾 ARCHIVOS IMPORTANTES
+
+config/config.php → Credenciales y configuración
+logs/error.log → Errores del sistema
+database/init.sql → Estructura de BD
+verificar.php → Diagnóstico automático
+
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ CHECKLIST DIARIO
+
+Inicio de turno:
+□ ¿Puedo acceder al sistema?
+□ ¿Aparecen todas las citas de hoy?
+□ ¿Verifiqué mis citas asignadas?
+□ ¿Dashboard muestra info correcta?
+
+Fin de turno:
+□ ¿Marqué citas completadas?
+□ ¿Guardé observaciones importantes?
+□ ¿Actualizé estado de citas?
+□ ¿Reporté problemas si hay?
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📞 CONTACTOS
+
+Sistema - Desarrollador:
+[Nombre]: _______________________
+[Email]: _______________________
+[Teléfono]: _______________________
+
+System Admin (Para credenciales):
+[Nombre]: _______________________
+[Email]: _______________________
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🆘 NÚMEROS DE EMERGENCIA
+
+Si el sistema no funciona:
+1. Ejecutar verificar.php
+2. Revisar logs/error.log
+3. Limpiar caché navegador
+4. Reintentar
+5. Si persiste → Contactar desarrollador
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🔐 SEGURIDAD
+
+✓ Nunca compartir contraseña
+✓ Logout al terminar turno
+✓ No acceder desde navegadores públicos
+✓ Reportar accesos sospechosos
+✓ Cambiar contraseña cada 3 meses
+
+═══════════════════════════════════════════════════════════════════════════════
+
+MANUAL RÁPIDO DE ACCIONES
+
+CREAR CITA (Solo Admin):
+→ Citas → Nueva Cita
+→ Llenar formulario
+→ Seleccionar técnico
+→ Guardar
+
+VER CITAS (Admin + Técnico):
+→ Citas (todo lo asignado)
+→ O Calendario (vista semanal)
+
+COMPLETAR CITA (Técnico):
+→ Citas → Buscar cita asignada
+→ Click "Completar"
+→ Agregar observaciones
+→ Guardar
+
+VER REPORTES (Admin + Técnico):
+→ Reportes
+→ Seleccionar rango de fechas
+→ Generar reporte
+→ Ver estadísticas
+
+CAMBIAR CONTRASEÑA (Todos):
+→ Perfil (esquina superior)
+→ Cambiar Contraseña
+→ Ingresar actual y nueva
+→ Guardar
+
+═══════════════════════════════════════════════════════════════════════════════
+
+ATAJOS ÚTILES
+
+F12 → Abrir herramientas desarrollador (no tocar)
+Ctrl+R → Refrescar página
+Ctrl+Shift+Delete → Limpiar caché navegador
+Ctrl+Shift+P → Modo incógnito (no usar en sistema)
+
+═══════════════════════════════════════════════════════════════════════════════
+
+NAVEGACIÓN
+
+Navbar superior:
+├─ Logo → Vuelve a dashboard
+├─ Menú → Todas las opciones
+├─ Perfil → Mi información
+└─ Logout → Cerrar sesión
+
+Menú principal:
+├─ Dashboard
+├─ Citas
+├─ Calendario
+├─ Reportes
+├─ Usuarios (Solo Admin)
+└─ Perfil
+
+═══════════════════════════════════════════════════════════════════════════════
+
+IMPORTANTE
+
+• NO compartir login de admin con técnicos
+• Cada técnico debe tener su propia cuenta
+• Admin debe mantener copia de contraseñas seguras
+• Hacer backup de BD regularmente
+• Revisar logs de error periódicamente
+
+═══════════════════════════════════════════════════════════════════════════════
+
+Fecha de instalación: _______________________
+Verificado por: _______________________
+Firma: _______________________
+
+Para detalles completos, revisar PRIMEROS_PASOS.md
+
+═══════════════════════════════════════════════════════════════════════════════
+
+Sistema de Agendamiento - Internet Cordillera v1.0
+Mayo 2026
+
+═══════════════════════════════════════════════════════════════════════════════
+
+IMPRIME ESTA TARJETA Y PÉGALA DONDE PUEDA VER TODOS
+
+═══════════════════════════════════════════════════════════════════════════════

@@ -1,0 +1,382 @@
+✅ CHECKLIST ANTES DE PRODUCCIÓN
+═══════════════════════════════════════════════════════════════════════════════
+
+Sistema: Agendamiento Internet Cordillera v1.0
+Fecha: Mayo 2026
+Estado: LISTO PARA PRODUCCIÓN
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🔴 CRÍTICO - DEBE SER COMPLETADO ANTES DE USAR CON DATOS REALES
+───────────────────────────────────────────────────────────────
+
+[ ] 1. CAMBIAR CONTRASEÑAS DE USUARIOS INICIALES
+    Usuarios por defecto: jean@internetcordillera.cl / 123456
+                         freddy@internetcordillera.cl / 123456
+    
+    Pasos:
+    1. Acceder al sistema con jean@internetcordillera.cl
+    2. Hacer click en perfil → Cambiar Contraseña
+    3. Ingresar contraseña actual (123456)
+    4. Ingresar contraseña nueva SEGURA (mínimo 8 caracteres)
+    5. Confirmar y guardar
+    6. Repetir con freddy@internetcordillera.cl
+    
+    ⚠️ NO DEJAR LAS CONTRASEÑAS POR DEFECTO EN PRODUCCIÓN
+
+[ ] 2. VERIFICAR CREDENCIALES DE BD EN config.php
+    Archivo: config/config.php
+    
+    Verificar:
+    - DB_HOST: ¿Correcto para tu hosting?
+    - DB_USER: ¿Usuario de BD creado?
+    - DB_PASS: ¿Contraseña de BD correcta?
+    - DB_NAME: ¿Nombre de BD correcto?
+    - APP_URL: ¿Dominio correcto con /sistema_agendamiento/?
+    
+    ⚠️ UNA SOLA LETRA MAL CAUSARÁ ERRORES
+
+[ ] 3. EJECUTAR VERIFICACIÓN DE INSTALACIÓN
+    
+    URL: https://tu-dominio.com/sistema_agendamiento/verificar.php
+    
+    Verificar que TODO esté ✓:
+    ✓ PHP 8.3 o superior
+    ✓ Extensiones: mysqli, json, session
+    ✓ Carpeta /logs existe
+    ✓ Conexión a BD exitosa
+    ✓ Tablas creadas (10+)
+    ✓ Permisos de escritura OK
+    
+    Si algo falla: VER SECCIÓN "TROUBLESHOOTING"
+    
+[ ] 4. PROBAR ACCESO AL SISTEMA
+    
+    Ir a: https://tu-dominio.com/sistema_agendamiento/
+    
+    ✓ Debe aparecer formulario de login
+    ✓ Login con jean@internetcordillera.cl / 123456
+    ✓ Debe entrar al dashboard
+    ✓ Logout funciona correctamente
+    ✓ Intento de acceso sin login redirige a login
+
+[ ] 5. CREAR USUARIOS DE EQUIPO REALES
+    
+    Para cada técnico:
+    1. Login como admin (jean)
+    2. Ir a → Usuarios → Nueva Usuario
+    3. Ingresar:
+       - Nombre: [nombre técnico]
+       - Email: [email@company.com]
+       - Contraseña: [contraseña segura]
+       - Perfil: Técnico
+       - Estado: Activo
+    4. Guardar
+    5. El técnico puede hacer login con sus credenciales
+    
+    ✓ Al menos 1 técnico debe estar creado
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🟠 ALTO - DEBE SER VERIFICADO ANTES DE USO
+────────────────────────────────────────────
+
+[ ] 6. PROBAR FLUJO COMPLETO DE CITA
+    
+    ADMIN:
+    1. Ir a Citas → Nueva Cita
+    2. Ingresar datos de prueba:
+       - Cliente: "Test Cliente"
+       - Teléfono: "+56912345678"
+       - Email: "test@example.com"
+       - Dirección: "Calle Test 123"
+       - Tipo: "Instalación"
+       - Fecha: [Mañana o próximo día laboral]
+       - Hora: "10:00"
+       - Técnico: [Técnico creado]
+       - Descripción: "Cita de prueba"
+    3. Click "Guardar"
+    4. Debe aparecer en lista
+    5. Verificar color correcto (verde para instalación)
+    
+    TÉCNICO:
+    1. Logout como admin
+    2. Login como técnico creado
+    3. Ir a Citas
+    4. Debe ver la cita creada
+    5. Click "Completar"
+    6. Ingresar observación: "Prueba completada"
+    7. Guardar
+    8. Estado debe cambiar a "COMPLETADA"
+    
+    ADMIN - VERIFICAR:
+    1. Login nuevamente como admin
+    2. Ir a Citas
+    3. Debe ver cita con estado "COMPLETADA"
+    4. Ir a Dashboard
+    5. Stats deben mostrar: 1 Completada, 0 Pendientes
+    6. Ir a Calendario
+    7. Cita debe aparecer en slot correcto
+    
+    ✓ Todos los pasos deben funcionar sin errores
+
+[ ] 7. VERIFICAR CALENDARIO SEMANAL
+    
+    1. Ir a Calendario
+    2. Debe mostrar semana actual (Lun-Sab)
+    3. Horarios de 09:00 a 18:00
+    4. Cita de prueba debe aparecer en slot correcto
+    5. Color debe ser correcto según tipo
+    6. Click en cita muestra detalles
+    7. Botones anterior/siguiente semana funcionan
+    8. Botón "Hoy" vuelve a semana actual
+    
+    ✓ Calendario debe ser completamente funcional
+
+[ ] 8. PROBAR REPORTES
+    
+    1. Ir a Reportes
+    2. Seleccionar rango de fechas (incluir cita de prueba)
+    3. Click "Generar Reporte"
+    4. Debe mostrar:
+       - Total de citas
+       - Citas completadas
+       - Citas pendientes
+       - Desglose por tipo
+       - Tabla con detalles
+    5. Stats deben coincidir con citas creadas
+    
+    ✓ Reportes deben ser precisos
+
+[ ] 9. PROBAR GESTIÓN DE USUARIOS (Admin)
+    
+    1. Ir a Usuarios
+    2. Debe listar usuarios creados
+    3. Click "Editar" en usuario
+    4. Cambiar nombre: "Nombre Actualizado"
+    5. Guardar
+    6. Cambio debe verse en lista
+    7. Crear nuevo usuario
+    8. Verificar que login funciona con nuevas credenciales
+    
+    ✓ CRUD de usuarios debe estar operativo
+
+[ ] 10. VERIFICAR PERMISOS DE ROLES
+    
+    TÉCNICO NO PUEDE:
+    [ ] Crear cita directamente
+    [ ] Editar cita
+    [ ] Eliminar cita
+    [ ] Acceder a Usuarios
+    
+    TÉCNICO PUEDE:
+    [ ] Ver dashboard
+    [ ] Ver citas asignadas
+    [ ] Marcar cita como completada
+    [ ] Ver calendario
+    [ ] Ver reportes
+    [ ] Cambiar contraseña
+    
+    ADMIN PUEDE:
+    [ ] Todo (crear, editar, eliminar, usuarios, etc.)
+    
+    ✓ Permisos deben estar correctamente implementados
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🟡 MEDIO - RECOMENDADO VERIFICAR
+──────────────────────────────────
+
+[ ] 11. REVISAR ARCHIVO DE ERRORES
+    
+    Si instalaste en cPanel:
+    1. Ir a File Manager
+    2. Navegar a public_html/sistema_agendamiento/logs
+    3. Abrir error.log
+    4. Verificar que NO haya errores críticos
+    5. Errores leves (warnings) pueden ignorarse
+    
+    ✓ Log debe estar limpio o con advertencias menores
+
+[ ] 12. VERIFICAR .htaccess FUNCIONA
+    
+    1. Intentar acceder a: https://tu-dominio.com/sistema_agendamiento/config/config.php
+    2. Debe mostrar error 403 Forbidden (no debe verse el código)
+    3. Lo mismo con: /logs/, /database/, /models/
+    
+    ✓ Archivos sensibles deben estar bloqueados
+
+[ ] 13. CONFIRMAR HTTPS ESTÁ ACTIVO
+    
+    1. Verificar URL: https:// (con S)
+    2. Debe haber candado en navegador
+    3. No debe haber advertencia de seguridad
+    
+    ✓ SSL/HTTPS debe estar configurado
+
+[ ] 14. PROBAR CON MÚLTIPLES NAVEGADORES
+    
+    [ ] Chrome/Chromium
+    [ ] Firefox
+    [ ] Safari (si tienes Mac)
+    [ ] Edge
+    [ ] Navegador móvil
+    
+    ✓ Debe funcionar en todos
+
+[ ] 15. HACER PRIMER BACKUP
+    
+    1. cPanel → MySQL Databases
+    2. Click en "Backup" en la BD
+    3. Descargar archivo SQL
+    4. Guardar en lugar seguro
+    5. REPETIR REGULARMENTE (diario/semanal)
+    
+    ✓ Backup inicial debe estar hecho
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🟢 BAJO - VERIFICAR EVENTUALMENTE
+────────────────────────────────────
+
+[ ] 16. DOCUMENTACIÓN DISPONIBLE PARA EQUIPO
+    
+    [ ] README.md - Descripción general
+    [ ] PRIMEROS_PASOS.md - Guía de inicio
+    [ ] INSTALACION.md - Instalación técnica
+    [ ] REFERENCIA_DESARROLLADORES.md - Para devs
+    
+    ✓ Equipo debe tener acceso a documentación
+
+[ ] 17. CONFIGURAR EMAILS DE CONTACTO
+    
+    Si deseas agregar emails:
+    1. Editar config/config.php
+    2. Agregar constante: define('ADMIN_EMAIL', 'admin@example.com');
+    3. Puede usarse en futuras notificaciones
+    
+[ ] 18. PLANIFICAR BACKUPS AUTOMÁTICOS
+    
+    Opciones:
+    1. cPanel tiene programador de backups automáticos
+    2. Scripts con mysqldump y cron
+    3. Servicios tipo Backup Buddy
+    
+    ✓ Decide qué estrategia usar
+
+[ ] 19. DOCUMENTAR ACCESOS
+    
+    Crear registro de:
+    - Email administrador principal
+    - Email de técnicos
+    - Contraseña temporal de BD (si diferente)
+    - Datos de FTP/cPanel
+    - Información de dominio
+    
+    ✓ Guardar en lugar seguro
+
+[ ] 20. ENTRENAR AL EQUIPO
+    
+    [ ] Mostrar dónde loguearse
+    [ ] Explicar dashboard
+    [ ] Cómo crear/ver citas
+    [ ] Cómo marcar completadas
+    [ ] Cómo ver calendario
+    [ ] Qué hacer si olvidó contraseña
+    
+    ✓ Equipo debe saber usar el sistema
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🚨 PROBLEMAS Y SOLUCIONES RÁPIDAS
+───────────────────────────────────
+
+PROBLEMA: "No se puede conectar a la base de datos"
+SOLUCIÓN:
+1. Verificar config/config.php credenciales
+2. En cPanel: Verificar usuario BD existe
+3. En cPanel → phpmyadmin: Intentar acceder con esas credenciales
+4. Si falla: Recrear usuario BD
+5. Reintentar
+
+PROBLEMA: "Archivo no encontrado 404"
+SOLUCIÓN:
+1. Verificar ruta: debe estar en public_html/sistema_agendamiento/
+2. Verificar permisos de carpetas (755)
+3. Verificar config.php APP_URL
+4. Limpiar caché navegador (Ctrl+Shift+Delete)
+
+PROBLEMA: "Permiso denegado 403"
+SOLUCIÓN:
+1. Verificar permisos: carpetas 755, archivos 644
+2. En cPanel: Change Permissions
+3. Reintentar acceso
+
+PROBLEMA: "Contraseña olvidada"
+SOLUCIÓN:
+1. cPanel → phpMyAdmin
+2. Seleccionar BD internet_agenda
+3. Tabla usuarios
+4. Editar usuario
+5. Campo password: cambiar a hash válido
+   Hash de "123456": $2y$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcg7b3XeKeUxWdeS86E36P4/KFm
+6. Guardar
+7. Ahora contraseña es "123456"
+
+PROBLEMA: "Citas no aparecen en calendario"
+SOLUCIÓN:
+1. Verificar en Citas.php que aparecen (BD ok)
+2. Verificar fecha sea dentro semana actual
+3. Limpiar caché navegador
+4. Revisar logs/error.log
+5. Probar en navegador diferente
+
+PROBLEMA: "Técnico ve citas que no le asignaron"
+SOLUCIÓN:
+1. Esto NO debe pasar, revisar código de permiso
+2. Verificar en BD que tecnico_id sea correcto
+3. Revisar CitaController::getAll() filtra por rol
+4. Si persiste: contactar soporte
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📋 RESUMEN FINAL
+─────────────────
+
+ANTES DE ABRIR AL EQUIPO:
+
+Completado:
+✓ Cambiar contraseñas iniciales
+✓ Verificar credenciales BD
+✓ Ejecutar verificar.php
+✓ Probar flujo completo
+✓ Crear usuarios reales
+✓ Hacer primer backup
+
+Sistema LISTO para:
+✓ Uso por técnicos
+✓ Creación de citas reales
+✓ Gestión de equipo
+✓ Generación de reportes
+
+═══════════════════════════════════════════════════════════════════════════════
+
+👍 ¡FELICITACIONES!
+
+Si completaste esta checklist, tu sistema está:
+✓ Instalado correctamente
+✓ Funcional y probado
+✓ Listo para producción
+✓ Seguro y protegido
+✓ Con backups en lugar seguro
+
+📞 Soporte: Revisar documentación o contactar desarrollador
+
+Última verificación: [Fecha completado]_________
+Verificado por: ________________
+Firma: _________________________
+
+═══════════════════════════════════════════════════════════════════════════════
+
+Sistema de Agendamiento - Internet Cordillera v1.0
+Mayo 2026
