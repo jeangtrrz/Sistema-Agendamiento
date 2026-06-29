@@ -169,12 +169,12 @@ sistema_agendamiento/
 Al instalar, se crean automáticamente dos usuarios de prueba:
 
 **Administrador:**
-- Email: `jean@internetcordillera.cl`
+- Email: `admin@correo.cl`
 - Contraseña: `123456`
 - Perfil: Administrador (acceso completo)
 
 **Técnico:**
-- Email: `freddy@internetcordillera.cl`
+- Email: `tecnico@dominio.cl`
 - Contraseña: `123456`
 - Perfil: Técnico (ver y completar citas)
 
@@ -287,18 +287,6 @@ Crear backup vía cPanel o SSH:
 mysqldump -u usuario -p internet_agenda > backup_$(date +%Y%m%d).sql
 ```
 
-### Actualizar Contraseña
-
-Si se olvida contraseña de admin, acceder a BD directamente:
-
-```sql
-UPDATE usuarios SET password = '$2y$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcg7b3XeKeUxWdeS86E36P4/KFm' 
-WHERE email = 'jean@internetcordillera.cl';
-```
-(Hash de "123456")
-
----
-
 ## API Endpoints
 
 ### Autenticación
@@ -345,14 +333,6 @@ Funcionalidades planeadas para próximas versiones:
 - [ ] Integración con Google Calendar
 - [ ] Multi-idioma
 - [ ] Temas oscuros
-
----
-
-## Contacto y Soporte
-
-Para reportar problemas o solicitar soporte:
-- Email: soporte@internetcordillera.cl
-- Teléfono: +56 2 XXXX XXXX
 
 ---
 
