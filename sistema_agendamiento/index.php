@@ -20,7 +20,7 @@ $error = $_GET['error'] ?? '';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - <?php echo APP_NAME; ?></title>
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/style.css?v=<?php echo filemtime(__DIR__ . '/assets/css/style.css'); ?>">
     <style>
         body {
             display: flex;
@@ -50,6 +50,12 @@ $error = $_GET['error'] ?? '';
             font-size: 24px;
             margin-bottom: 8px;
             color: white;
+        }
+
+        .login-logo {
+            height: 56px;
+            width: auto;
+            margin-bottom: 8px;
         }
 
         .login-header p {
@@ -90,7 +96,7 @@ $error = $_GET['error'] ?? '';
 <body>
     <div class="login-container">
         <div class="login-header">
-            <h1>🌐 Internet Cordillera</h1>
+            <img src="assets/images/logo.png" alt="Internet Cordillera" class="login-logo">
             <p>Sistema de Agendamiento Online</p>
         </div>
 

@@ -20,15 +20,14 @@ closeDBConnection($conn);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Eventos - <?php echo APP_NAME; ?></title>
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/style.css?v=<?php echo filemtime(__DIR__ . '/assets/css/style.css'); ?>">
     <link rel="icon" type="image/x-icon" href="assets/images/favicon.ico">
 </head>
 <body data-page="eventos">
     <nav class="navbar">
         <div class="navbar-container">
             <div class="navbar-brand">
-                <span>🌐</span>
-                <a href="dashboard.php">Internet Cordillera</a>
+                <a href="dashboard.php"><img src="assets/images/logo.png" alt="Internet Cordillera" class="navbar-logo"></a>
             </div>
             <ul class="navbar-menu">
                 <li class="navbar-item"><a href="dashboard.php">Dashboard</a></li>
@@ -186,8 +185,8 @@ closeDBConnection($conn);
         </div>
     </div>
 
-    <script src="assets/js/main.js"></script>
-    <script src="assets/js/eventos.js"></script>
+    <script src="assets/js/main.js?v=<?php echo filemtime(__DIR__ . '/assets/js/main.js'); ?>"></script>
+    <script src="assets/js/eventos.js?v=<?php echo filemtime(__DIR__ . '/assets/js/eventos.js'); ?>"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             Eventos.loadEventos();

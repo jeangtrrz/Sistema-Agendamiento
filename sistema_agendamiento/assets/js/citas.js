@@ -251,14 +251,15 @@ const Citas = {
      * Auxiliares
      */
     formatDate: function(date) {
-        return new Date(date).toLocaleDateString('es-CL');
+        return Utils.parseLocalDate(date).toLocaleDateString('es-CL');
     },
 
     getTipoLabel: function(tipo) {
         const tipos = {
             'instalacion': 'Instalación',
             'retiro': 'Retiro',
-            'soporte': 'Soporte'
+            'soporte': 'Soporte',
+            'traslado': 'Traslado'
         };
         return tipos[tipo] || tipo;
     },
@@ -267,7 +268,8 @@ const Citas = {
         const clases = {
             'instalacion': 'success',
             'retiro': 'warning',
-            'soporte': 'info'
+            'soporte': 'info',
+            'traslado': 'purple'
         };
         return clases[tipo] || 'primary';
     },

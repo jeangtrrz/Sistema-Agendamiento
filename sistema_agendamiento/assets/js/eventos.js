@@ -171,7 +171,7 @@ const Eventos = {
     },
 
     formatDate: function(date) {
-        return new Date(date).toLocaleDateString('es-CL');
+        return Utils.parseLocalDate(date).toLocaleDateString('es-CL');
     },
 
     getTipoLabel: function(tipo) {

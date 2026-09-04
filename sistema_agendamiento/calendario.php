@@ -36,7 +36,7 @@ $horaFin = intval(HORA_FIN);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calendario - <?php echo APP_NAME; ?></title>
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/style.css?v=<?php echo filemtime(__DIR__ . '/assets/css/style.css'); ?>">
         <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="assets/images/favicon.ico">
 </head>
@@ -45,8 +45,7 @@ $horaFin = intval(HORA_FIN);
     <nav class="navbar">
         <div class="navbar-container">
             <div class="navbar-brand">
-                <span>🌐</span>
-                <a href="dashboard.php">Internet Cordillera</a>
+                <a href="dashboard.php"><img src="assets/images/logo.png" alt="Internet Cordillera" class="navbar-logo"></a>
             </div>
 
             <ul class="navbar-menu">
@@ -106,6 +105,13 @@ $horaFin = intval(HORA_FIN);
                     </div>
                 </div>
 
+                <!-- Vista de agenda para móviles -->
+                <div class="agenda-mobile-view" id="agendaMobileView">
+                    <div class="agenda-day-strip" id="agendaDayStrip"></div>
+                    <div class="agenda-day-title" id="agendaDayTitle"></div>
+                    <div class="agenda-list" id="agendaList"></div>
+                </div>
+
                 <!-- Tablero semanal -->
                 <div class="weekly-calendar" id="weeklyCalendar">
                     <!-- Columna de horarios -->
@@ -122,7 +128,7 @@ $horaFin = intval(HORA_FIN);
                     <!-- Días de la semana -->
                     <div class="weekly-calendar-days" id="weeklyCalendarDays">
                         <?php foreach ($days as $day): ?>
-                            <div class="calendar-day-column">
+                            <div class="calendar-day-column<?php echo $day === date('Y-m-d') ? ' today' : ''; ?>">
                                 <div class="calendar-day-header">
                                     <span class="day-name">
                                         <?php echo $diasSemana[intval(date('N', strtotime($day)))]; ?>
@@ -160,6 +166,10 @@ $horaFin = intval(HORA_FIN);
                 <span>Soporte</span>
             </div>
             <div style="display: flex; align-items: center; gap: 8px;">
+                <div style="width: 20px; height: 20px; background-color: #00BCD4; border-radius: 4px;"></div>
+                <span>Traslado</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px;">
                 <div style="width: 20px; height: 20px; background-color: #8b5cf6; border-radius: 4px;"></div>
                 <span>Reunión</span>
             </div>
@@ -187,9 +197,10 @@ $horaFin = intval(HORA_FIN);
         </div>
     </div>
 
-    <script src="assets/js/main.js"></script>
+    <script src="assets/js/main.js?v=<?php echo filemtime(__DIR__ . '/assets/js/main.js'); ?>"></script>
     <script>
-        let currentMonday = new Date('<?php echo $monday; ?>');
+        let currentMonday = Utils.parseLocalDate('<?php echo $monday; ?>');
+        const todayKey = '<?php echo date('Y-m-d'); ?>';
         const horaInicio = <?php echo intval($horaInicio); ?>;
         const horaFin = <?php echo intval($horaFin); ?>;
 
@@ -212,12 +223,13 @@ $horaFin = intval(HORA_FIN);
                     month: '2-digit'
                 });
                 const dateKey = `${dayDate.getFullYear()}-${String(dayDate.getMonth() + 1).padStart(2, '0')}-${String(dayDate.getDate()).padStart(2, '0')}`;
+                const isToday = dateKey === todayKey;
                 const slots = Array.from({ length: horaFin - horaInicio }, (_, index) => {
                     return `<div class="calendar-slot" data-hour="${horaInicio + index}"></div>`;
                 }).join('');
 
                 columns.push(`
-                    <div class="calendar-day-column">
+                    <div class="calendar-day-column${isToday ? ' today' : ''}">
                         <div class="calendar-day-header">
                             <span class="day-name">${dayName}</span>
                             <span class="day-date">${formattedDate}</span>
@@ -234,6 +246,10 @@ $horaFin = intval(HORA_FIN);
 
         function loadWeekCalendar() {
             renderWeekDays();
+            // Reaplicar el filtro de columnas (vista 3 días/1 día) sobre la grilla recién generada
+            if (typeof CalendarResponsive !== 'undefined') {
+                CalendarResponsive.applyView();
+            }
             const monday = currentMonday;
             const formData = new FormData();
             formData.append('action', 'getWeekCitas');
@@ -253,6 +269,7 @@ $horaFin = intval(HORA_FIN);
                     }).then(response => response.json()).then(eventosResult => {
                         if (eventosResult.success) {
                             drawCalendar(result.data, eventosResult.data);
+                            renderAgenda(result.data, eventosResult.data);
                             updateWeekDisplay();
                         }
                     });
@@ -260,12 +277,119 @@ $horaFin = intval(HORA_FIN);
             });
         }
 
+        let selectedAgendaDate = null;
+
+        function getWeekDayKeys() {
+            const daysOfWeek = ['LUN', 'MAR', 'MIÉ', 'JUE', 'VIE', 'SÁB'];
+            const keys = [];
+            for (let i = 0; i < 6; i++) {
+                const d = new Date(currentMonday.getTime());
+                d.setDate(d.getDate() + i);
+                keys.push({
+                    dateKey: `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`,
+                    dayName: daysOfWeek[i],
+                    dayNum: d.getDate()
+                });
+            }
+            return keys;
+        }
+
+        function renderAgenda(citas, eventos) {
+            const weekDays = getWeekDayKeys();
+            const weekKeys = weekDays.map(d => d.dateKey);
+
+            if (!selectedAgendaDate || !weekKeys.includes(selectedAgendaDate)) {
+                selectedAgendaDate = weekKeys.includes(todayKey) ? todayKey : weekKeys[0];
+            }
+
+            const hasItems = {};
+            weekKeys.forEach(k => hasItems[k] = false);
+            citas.forEach(c => { if (hasItems[c.fecha_cita] !== undefined) hasItems[c.fecha_cita] = true; });
+            eventos.forEach(e => { if (hasItems[e.fecha_evento] !== undefined) hasItems[e.fecha_evento] = true; });
+
+            const strip = document.getElementById('agendaDayStrip');
+            if (strip) {
+                strip.innerHTML = weekDays.map(d => `
+                    <button type="button" class="agenda-day-btn${d.dateKey === selectedAgendaDate ? ' active' : ''}" data-date="${d.dateKey}">
+                        <span class="agenda-day-name">${d.dayName}</span>
+                        <span class="agenda-day-num">${d.dayNum}</span>
+                        ${hasItems[d.dateKey] ? '<span class="agenda-day-dot"></span>' : ''}
+                    </button>
+                `).join('');
+                strip.querySelectorAll('.agenda-day-btn').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        selectedAgendaDate = btn.dataset.date;
+                        renderAgenda(citas, eventos);
+                    });
+                });
+            }
+
+            const titleEl = document.getElementById('agendaDayTitle');
+            if (titleEl) {
+                titleEl.textContent = Utils.parseLocalDate(selectedAgendaDate).toLocaleDateString('es-CL', {
+                    weekday: 'long', day: 'numeric', month: 'long'
+                });
+            }
+
+            const listEl = document.getElementById('agendaList');
+            if (!listEl) return;
+
+            const dayCitas = citas.filter(c => c.fecha_cita === selectedAgendaDate).map(c => ({ ...c, _tipo: 'cita' }));
+            const dayEventos = eventos.filter(e => e.fecha_evento === selectedAgendaDate).map(e => ({ ...e, _tipo: 'evento' }));
+            const items = [...dayCitas, ...dayEventos].sort((a, b) => a.hora_inicio.localeCompare(b.hora_inicio));
+
+            if (items.length === 0) {
+                listEl.innerHTML = '<div class="agenda-empty">No hay citas ni eventos para este día</div>';
+                return;
+            }
+
+            const estadosCita = { pendiente: 'Pendiente', completada: 'Completada', cancelada: 'Cancelada' };
+            const estadosEvento = { programado: 'Programado', completado: 'Completado', cancelado: 'Cancelado' };
+
+            listEl.innerHTML = items.map((item, index) => {
+                const esCita = item._tipo === 'cita';
+                const tipoClase = esCita ? item.tipo_cita : item.tipo_evento;
+                const titulo = esCita ? item.cliente_nombre : item.titulo;
+                const persona = esCita ? item.tecnico_nombre : (item.responsable_nombre || 'Equipo');
+                const estadoLabel = esCita ? (estadosCita[item.estado] || item.estado) : (estadosEvento[item.estado] || item.estado);
+                const initials = (persona || '?').trim().charAt(0).toUpperCase();
+
+                return `
+                    <div class="agenda-card ${tipoClase} ${item.estado}" data-index="${index}">
+                        <div class="agenda-card-status ${item.estado}">${estadoLabel}</div>
+                        <div class="agenda-card-title">${escapeHtml(titulo)}</div>
+                        <div class="agenda-card-meta">
+                            <span class="agenda-card-avatar">${initials}</span>
+                            <span>${escapeHtml(persona)}</span>
+                            <span class="agenda-card-time">${item.hora_inicio.substring(0, 5)}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            listEl.querySelectorAll('.agenda-card').forEach(card => {
+                const item = items[parseInt(card.dataset.index)];
+                card.addEventListener('click', () => {
+                    if (item._tipo === 'cita') {
+                        showCitaDetails(item);
+                    } else {
+                        showEventoDetails(item);
+                    }
+                });
+            });
+        }
+
+        function escapeHtml(str) {
+            const div = document.createElement('div');
+            div.textContent = str ?? '';
+            return div.innerHTML;
+        }
+
         function drawCalendar(citas, eventos = []) {
             // Limpiar calendarios
             document.querySelectorAll('.calendar-slot').forEach(slot => {
                 slot.innerHTML = '';
             });
-
             // Dibujar citas
             citas.forEach(cita => {
                 const col = document.querySelector(`[data-date="${cita.fecha_cita}"]`);
@@ -276,10 +400,12 @@ $horaFin = intval(HORA_FIN);
                     if (slot) {
                         const citaDiv = document.createElement('div');
                         const tipo = cita.tipo_cita;
-                        citaDiv.className = `calendar-slot-cita ${tipo}`;
+                        const completada = cita.estado === 'completada' ? ' completada' : '';
+                        citaDiv.className = `calendar-slot-cita ${tipo}${completada}`;
+                        citaDiv.title = `${cita.cliente_nombre} • ${cita.tecnico_nombre}`;
                         citaDiv.innerHTML = `
-                            <strong>${cita.cliente_nombre.substring(0, 10)}</strong><br>
-                            <small>${cita.tecnico_nombre}</small>
+                            <span class="cita-nombre">${escapeHtml(cita.cliente_nombre)}</span>
+                            <span class="cita-tecnico">${escapeHtml(cita.tecnico_nombre)}</span>
                         `;
                         citaDiv.onclick = () => showCitaDetails(cita);
                         slot.appendChild(citaDiv);
@@ -295,10 +421,12 @@ $horaFin = intval(HORA_FIN);
                     const slot = col.querySelector(`[data-hour="${hour}"]`);
                     if (slot) {
                         const eventoDiv = document.createElement('div');
-                        eventoDiv.className = `calendar-slot-cita ${evento.tipo_evento}`;
+                        const completado = evento.estado === 'completado' ? ' completada' : '';
+                        eventoDiv.className = `calendar-slot-cita ${evento.tipo_evento}${completado}`;
+                        eventoDiv.title = `${evento.titulo} • ${evento.responsable_nombre || 'Equipo'}`;
                         eventoDiv.innerHTML = `
-                            <strong>${evento.titulo.substring(0, 12)}</strong><br>
-                            <small>${evento.responsable_nombre || 'Equipo'}</small>
+                            <span class="cita-nombre">${escapeHtml(evento.titulo)}</span>
+                            <span class="cita-tecnico">${escapeHtml(evento.responsable_nombre || 'Equipo')}</span>
                         `;
                         eventoDiv.onclick = () => showEventoDetails(evento);
                         slot.appendChild(eventoDiv);
@@ -311,7 +439,8 @@ $horaFin = intval(HORA_FIN);
             const tipos = {
                 'instalacion': 'Instalación de Servicio',
                 'retiro': 'Retiro de Equipamiento',
-                'soporte': 'Visita de Soporte'
+                'soporte': 'Visita de Soporte',
+                'traslado': 'Traslado'
             };
 
             const estados = {
@@ -352,7 +481,7 @@ $horaFin = intval(HORA_FIN);
                 <div class="form-row">
                     <div class="form-group">
                         <label>Fecha y Hora</label>
-                        <p>${new Date(cita.fecha_cita).toLocaleDateString('es-CL')} ${cita.hora_inicio}</p>
+                        <p>${Utils.parseLocalDate(cita.fecha_cita).toLocaleDateString('es-CL')} ${cita.hora_inicio}</p>
                     </div>
                     <div class="form-group">
                         <label>Técnico</label>
@@ -404,7 +533,7 @@ $horaFin = intval(HORA_FIN);
                 <div class="form-row">
                     <div class="form-group">
                         <label>Fecha y hora</label>
-                        <p>${new Date(evento.fecha_evento).toLocaleDateString('es-CL')} ${evento.hora_inicio}</p>
+                        <p>${Utils.parseLocalDate(evento.fecha_evento).toLocaleDateString('es-CL')} ${evento.hora_inicio}</p>
                     </div>
                     <div class="form-group">
                         <label>Responsable</label>
@@ -454,7 +583,7 @@ $horaFin = intval(HORA_FIN);
         }
 
         function currentWeek() {
-            currentMonday = new Date();
+            currentMonday = Utils.parseLocalDate(todayKey);
             currentMonday.setDate(currentMonday.getDate() - (currentMonday.getDay() + 6) % 7);
             loadWeekCalendar();
         }

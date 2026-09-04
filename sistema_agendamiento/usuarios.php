@@ -14,7 +14,7 @@ requireAdmin();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Usuarios - <?php echo APP_NAME; ?></title>
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/style.css?v=<?php echo filemtime(__DIR__ . '/assets/css/style.css'); ?>">
         <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="assets/images/favicon.ico">
 </head>
@@ -23,8 +23,7 @@ requireAdmin();
     <nav class="navbar">
         <div class="navbar-container">
             <div class="navbar-brand">
-                <span>🌐</span>
-                <a href="dashboard.php">Internet Cordillera</a>
+                <a href="dashboard.php"><img src="assets/images/logo.png" alt="Internet Cordillera" class="navbar-logo"></a>
             </div>
 
             <ul class="navbar-menu">
@@ -140,7 +139,7 @@ requireAdmin();
         </div>
     </div>
 
-    <script src="assets/js/main.js"></script>
+    <script src="assets/js/main.js?v=<?php echo filemtime(__DIR__ . '/assets/js/main.js'); ?>"></script>
     <script>
         const Usuarios = {
             /**

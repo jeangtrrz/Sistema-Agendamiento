@@ -78,10 +78,23 @@ const Utils = {
     },
 
     /**
+     * Parsear 'YYYY-MM-DD' como fecha local, evitando el desfase de un día que
+     * provoca `new Date('YYYY-MM-DD')` al interpretarse como UTC en zonas
+     * horarias negativas (ej. America/Santiago).
+     */
+    parseLocalDate: function(date) {
+        if (date instanceof Date) return date;
+        const match = /^(\d{4})-(\d{2})-(\d{2})(?:[ T](\d{2}):(\d{2})(?::(\d{2}))?)?/.exec(String(date));
+        if (!match) return new Date(date);
+        const [, year, month, day, hours, minutes, seconds] = match;
+        return new Date(Number(year), Number(month) - 1, Number(day), Number(hours || 0), Number(minutes || 0), Number(seconds || 0));
+    },
+
+    /**
      * Formatear fecha
      */
     formatDate: function(date, format = 'dd/mm/yyyy') {
-        const d = new Date(date);
+        const d = this.parseLocalDate(date);
         const day = String(d.getDate()).padStart(2, '0');
         const month = String(d.getMonth() + 1).padStart(2, '0');
         const year = d.getFullYear();
@@ -101,7 +114,7 @@ const Utils = {
      */
     getDayName: function(date) {
         const days = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
-        return days[new Date(date).getDay()];
+        return days[this.parseLocalDate(date).getDay()];
     },
 
     /**
@@ -325,6 +338,7 @@ const CalendarResponsive = {
     init: function() {
         this.detectView();
         window.addEventListener('resize', () => this.handleResize());
+        window.addEventListener('orientationchange', () => this.handleResize());
         
         // Crear controles de vista si es necesario
         this.createViewControls();
@@ -335,9 +349,12 @@ const CalendarResponsive = {
      */
     detectView: function() {
         const width = window.innerWidth;
+        const height = window.innerHeight;
+        const isLandscape = width > height;
         let newView;
 
-        if (width > 768) {
+        // En horizontal se muestra siempre la semana completa (salvo ancho extremadamente pequeño)
+        if (width > 768 || (isLandscape && width > 480)) {
             newView = 'desktop';
         } else if (width > 480) {
             newView = '3day';

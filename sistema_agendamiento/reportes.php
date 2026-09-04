@@ -14,7 +14,7 @@ requireAuth();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reportes - <?php echo APP_NAME; ?></title>
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/style.css?v=<?php echo filemtime(__DIR__ . '/assets/css/style.css'); ?>">
         <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="assets/images/favicon.ico">
 </head>
@@ -23,8 +23,7 @@ requireAuth();
     <nav class="navbar">
         <div class="navbar-container">
             <div class="navbar-brand">
-                <span>🌐</span>
-                <a href="dashboard.php">Internet Cordillera</a>
+                <a href="dashboard.php"><img src="assets/images/logo.png" alt="Internet Cordillera" class="navbar-logo"></a>
             </div>
 
             <ul class="navbar-menu">
@@ -158,7 +157,7 @@ requireAuth();
         </div>
     </div>
 
-    <script src="assets/js/main.js"></script>
+    <script src="assets/js/main.js?v=<?php echo filemtime(__DIR__ . '/assets/js/main.js'); ?>"></script>
     <script>
         function generateReport() {
             const fechaInicio = document.getElementById('reportFechaInicio').value;
@@ -191,7 +190,7 @@ requireAuth();
 
         function updateReportStats(citas) {
             let completadas = 0, pendientes = 0, canceladas = 0;
-            let tiposCount = { instalacion: 0, retiro: 0, soporte: 0 };
+            let tiposCount = { instalacion: 0, retiro: 0, soporte: 0, traslado: 0 };
             let estadosCount = { pendiente: 0, completada: 0, cancelada: 0 };
 
             citas.forEach(cita => {
@@ -218,9 +217,13 @@ requireAuth();
                     <span>Retiros</span>
                     <strong>${tiposCount.retiro}</strong>
                 </div>
-                <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0;">
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #e2e8f0;">
                     <span>Soportes</span>
                     <strong>${tiposCount.soporte}</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0;">
+                    <span>Traslados</span>
+                    <strong>${tiposCount.traslado}</strong>
                 </div>
             `;
             document.getElementById('porTipo').innerHTML = tiposContent;
@@ -251,10 +254,10 @@ requireAuth();
                 return;
             }
 
-            const tipos = { 'instalacion': 'Instalación', 'retiro': 'Retiro', 'soporte': 'Soporte' };
+            const tipos = { 'instalacion': 'Instalación', 'retiro': 'Retiro', 'soporte': 'Soporte', 'traslado': 'Traslado' };
             const estados = { 'pendiente': 'Pendiente', 'completada': 'Completada', 'cancelada': 'Cancelada' };
             const badgeClass = {
-                'instalacion': 'success', 'retiro': 'warning', 'soporte': 'info',
+                'instalacion': 'success', 'retiro': 'warning', 'soporte': 'info', 'traslado': 'purple',
                 'pendiente': 'warning', 'completada': 'success', 'cancelada': 'danger'
             };
 
@@ -263,7 +266,7 @@ requireAuth();
                 const horaFin = cita.hora_fin.substring(0, 5);
                 return `
                     <tr>
-                        <td>${new Date(cita.fecha_cita).toLocaleDateString('es-CL')}</td>
+                        <td>${Utils.parseLocalDate(cita.fecha_cita).toLocaleDateString('es-CL')}</td>
                         <td>${cita.cliente_nombre}</td>
                         <td><span class="badge badge-${badgeClass[cita.tipo_cita]}">${tipos[cita.tipo_cita]}</span></td>
                         <td>${cita.tecnico_nombre}</td>

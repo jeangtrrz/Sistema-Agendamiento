@@ -197,6 +197,12 @@ class Cita {
             $values[] = $data['cliente_direccion'];
         }
 
+        if (isset($data['tipo_cita'])) {
+            $fields[] = "tipo_cita = ?";
+            $types .= "s";
+            $values[] = $data['tipo_cita'];
+        }
+
         if (isset($data['fecha_cita'])) {
             $fields[] = "fecha_cita = ?";
             $types .= "s";

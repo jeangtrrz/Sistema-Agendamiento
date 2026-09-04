@@ -20,7 +20,7 @@ closeDBConnection($conn);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Citas - <?php echo APP_NAME; ?></title>
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/style.css?v=<?php echo filemtime(__DIR__ . '/assets/css/style.css'); ?>">
         <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="assets/images/favicon.ico">
 </head>
@@ -29,8 +29,7 @@ closeDBConnection($conn);
     <nav class="navbar">
         <div class="navbar-container">
             <div class="navbar-brand">
-                <span>🌐</span>
-                <a href="dashboard.php">Internet Cordillera</a>
+                <a href="dashboard.php"><img src="assets/images/logo.png" alt="Internet Cordillera" class="navbar-logo"></a>
             </div>
 
             <ul class="navbar-menu">
@@ -86,6 +85,7 @@ closeDBConnection($conn);
                             <option value="instalacion">Instalación</option>
                             <option value="retiro">Retiro</option>
                             <option value="soporte">Soporte</option>
+                            <option value="traslado">Traslado</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -167,6 +167,7 @@ closeDBConnection($conn);
                                 <option value="instalacion">Instalación de Servicio</option>
                                 <option value="retiro">Retiro de Equipamiento</option>
                                 <option value="soporte">Visita de Soporte</option>
+                                <option value="traslado">Traslado</option>
                             </select>
                         </div>
                         <div class="form-group">
@@ -211,8 +212,8 @@ closeDBConnection($conn);
         </div>
     </div>
 
-    <script src="assets/js/main.js"></script>
-    <script src="assets/js/citas.js"></script>
+    <script src="assets/js/main.js?v=<?php echo filemtime(__DIR__ . '/assets/js/main.js'); ?>"></script>
+    <script src="assets/js/citas.js?v=<?php echo filemtime(__DIR__ . '/assets/js/citas.js'); ?>"></script>
     <script>
         // Cargar citas al iniciar
         document.addEventListener('DOMContentLoaded', function() {
