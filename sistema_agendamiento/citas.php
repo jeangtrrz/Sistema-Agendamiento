@@ -37,21 +37,31 @@ closeDBConnection($conn);
                 <li class="navbar-item"><a href="dashboard.php">Dashboard</a></li>
                 <li class="navbar-item active"><a href="citas.php">Citas</a></li>
                 <li class="navbar-item"><a href="calendario.php">Calendario</a></li>
+                <li class="navbar-item"><a href="eventos.php">Eventos</a></li>
                 <li class="navbar-item"><a href="reportes.php">Reportes</a></li>
                 <?php if (isAdmin()): ?>
                     <li class="navbar-item"><a href="usuarios.php">Usuarios</a></li>
                 <?php endif; ?>
             </ul>
 
+            <button class="navbar-toggle" aria-label="Abrir menú">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
             <div class="navbar-user">
                 <div class="navbar-user-profile">
                     <?php echo strtoupper(substr($_SESSION['user_nombre'], 0, 1)); ?>
                 </div>
                 <span><?php echo $_SESSION['user_nombre']; ?></span>
-                <a href="#" onclick="logout(); return false;" style="margin-left: 12px;">Salir</a>
+                <a href="#" onclick="logout(); return false;">Salir</a>
             </div>
         </div>
     </nav>
+
+    <!-- Mobile menu overlay -->
+    <div class="navbar-mobile-overlay"></div>
 
     <!-- Contenido Principal -->
     <div class="container">

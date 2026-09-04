@@ -6,12 +6,14 @@
 require_once 'config/config.php';
 require_once 'config/session.php';
 require_once 'models/Cita.php';
+require_once 'models/Evento.php';
 require_once 'models/Usuario.php';
 
 requireAuth();
 
 $conn = getDBConnection();
 $citaModel = new Cita($conn);
+$eventoModel = new Evento($conn);
 $usuarioModel = new Usuario($conn);
 
 // Obtener estadísticas
@@ -53,6 +55,8 @@ $citasSemanales = $citaModel->getAll([
     'fecha_fin' => $weekEnd
 ]);
 
+$eventosProximos = $eventoModel->getUpcoming(5);
+
 closeDBConnection($conn);
 ?>
 <!DOCTYPE html>
@@ -78,21 +82,31 @@ closeDBConnection($conn);
                 <li class="navbar-item active"><a href="dashboard.php">Dashboard</a></li>
                 <li class="navbar-item"><a href="citas.php">Citas</a></li>
                 <li class="navbar-item"><a href="calendario.php">Calendario</a></li>
+                <li class="navbar-item"><a href="eventos.php">Eventos</a></li>
                 <li class="navbar-item"><a href="reportes.php">Reportes</a></li>
                 <?php if (isAdmin()): ?>
                     <li class="navbar-item"><a href="usuarios.php">Usuarios</a></li>
                 <?php endif; ?>
             </ul>
 
+            <button class="navbar-toggle" aria-label="Abrir menú">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
             <div class="navbar-user">
                 <div class="navbar-user-profile">
                     <?php echo strtoupper(substr($_SESSION['user_nombre'], 0, 1)); ?>
                 </div>
                 <span><?php echo $_SESSION['user_nombre']; ?></span>
-                <a href="#" onclick="logout(); return false;" style="margin-left: 12px;">Salir</a>
+                <a href="#" onclick="logout(); return false;">Salir</a>
             </div>
         </div>
     </nav>
+
+    <!-- Mobile menu overlay -->
+    <div class="navbar-mobile-overlay"></div>
 
     <!-- Contenido Principal -->
     <div class="container">
@@ -129,6 +143,54 @@ closeDBConnection($conn);
                 <div class="stat-label">Soportes</div>
                 <div class="stat-value"><?php echo $citasSoporte; ?></div>
                 <div class="stat-change">Visitas de soporte</div>
+            </div>
+        </div>
+
+        <div class="card" style="margin-bottom: 24px;">
+            <div class="card-header">
+                <h3 class="card-title">Eventos Próximos</h3>
+                <p class="card-subtitle">Compromisos y reuniones del equipo</p>
+            </div>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Hora</th>
+                            <th>Título</th>
+                            <th>Tipo</th>
+                            <th>Responsable</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php if (empty($eventosProximos)): ?>
+                            <tr><td colspan="6" class="text-center">No hay eventos próximos</td></tr>
+                        <?php else: foreach ($eventosProximos as $evento): ?>
+                            <tr>
+                                <td><?php echo date('d/m/Y', strtotime($evento['fecha_evento'])); ?></td>
+                                <td><?php echo $evento['hora_inicio']; ?></td>
+                                <td><?php echo htmlspecialchars($evento['titulo']); ?></td>
+                                <td>
+                                    <?php $tipoEventoLabel = ['reunion' => 'Reunión', 'compromiso' => 'Compromiso', 'evento' => 'Evento']; ?>
+                                    <span class="badge badge-<?php echo ['reunion' => 'info', 'compromiso' => 'warning', 'evento' => 'primary'][$evento['tipo_evento']] ?? 'primary'; ?>">
+                                        <?php echo $tipoEventoLabel[$evento['tipo_evento']] ?? $evento['tipo_evento']; ?>
+                                    </span>
+                                </td>
+                                <td><?php echo htmlspecialchars($evento['responsable_nombre'] ?? '-'); ?></td>
+                                <td>
+                                    <?php $estadoEventoBadge = ['programado' => 'warning', 'completado' => 'success', 'cancelado' => 'danger']; $estadoEventoLabel = ['programado' => 'Programado', 'completado' => 'Completado', 'cancelado' => 'Cancelado']; ?>
+                                    <span class="badge badge-<?php echo $estadoEventoBadge[$evento['estado']] ?? 'primary'; ?>">
+                                        <?php echo $estadoEventoLabel[$evento['estado']] ?? $evento['estado']; ?>
+                                    </span>
+                                </td>
+                            </tr>
+                        <?php endforeach; endif; ?>
+                    </tbody>
+                </table>
+            </div>
+            <div class="card-footer">
+                <a href="eventos.php" class="btn btn-primary">Gestionar eventos</a>
             </div>
         </div>
 

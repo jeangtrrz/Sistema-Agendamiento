@@ -37,15 +37,24 @@ requireAuth();
                 <?php endif; ?>
             </ul>
 
+            <button class="navbar-toggle" aria-label="Abrir menú">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
             <div class="navbar-user">
                 <div class="navbar-user-profile">
                     <?php echo strtoupper(substr($_SESSION['user_nombre'], 0, 1)); ?>
                 </div>
                 <span><?php echo $_SESSION['user_nombre']; ?></span>
-                <a href="#" onclick="logout(); return false;" style="margin-left: 12px;">Salir</a>
+                <a href="#" onclick="logout(); return false;">Salir</a>
             </div>
         </div>
     </nav>
+
+    <!-- Mobile menu overlay -->
+    <div class="navbar-mobile-overlay"></div>
 
     <!-- Contenido Principal -->
     <div class="container">
